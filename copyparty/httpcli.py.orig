@@ -43,7 +43,6 @@ from .util import (
     Pebkac,
     UnrecvEOF,
     alltrace,
-    absreal,
     atomic_move,
     exclude_dotfiles,
     fsenc,
@@ -586,14 +585,7 @@ class HttpCli(object):
             if self.vpath.startswith(".cpr/ico/"):
                 return self.tx_ico(self.vpath.split("/")[-1], exact=True)
 
-            path_base = os.path.join(self.E.mod, "web")
-            static_path = absreal(os.path.join(path_base, self.vpath[5:]))
-            if not static_path.startswith(path_base):
-                t = "attempted path traversal [{}] => [{}]"
-                self.log(t.format(self.vpath, static_path), 1)
-                self.tx_404()
-                return False
-
+            static_path = os.path.join(self.E.mod, "web/", self.vpath[5:])
             return self.tx_file(static_path)
 
         if "cf_challenge" in self.uparam:
